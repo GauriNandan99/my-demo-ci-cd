@@ -22,9 +22,9 @@ variable "vpc_info" {
 
 variable "public_subnets_config" {
   type = list(object({
-    cidr_block        = string
-    az = string
-    tags              = map(string)
+    cidr_block = string
+    az         = string
+    tags       = map(string)
   }))
   description = "public subnets configuration"
   default = [{
@@ -46,9 +46,9 @@ variable "public_subnets_config" {
 
 variable "private_subnets_config" {
   type = list(object({
-    cidr_block        = string
-    az = string
-    tags              = map(string)
+    cidr_block = string
+    az         = string
+    tags       = map(string)
   }))
   description = "public subnets configuration"
   default = [{
@@ -80,21 +80,21 @@ variable "security_group" {
     }))
   })
   default = [{
-        name = "demo_nop"
-        description = "security group"
-        inbound_rules = [{
-            port = "5000"
-            protocol = "tcp"
-            source = "0.0.0.0/0"
-            description = "open tcp port"
-        },
-        {
-            port = "22"
-            protocol = "tcp"
-            source = "0.0.0.0/0"
-            description = "open ssh port"
-        }]    
-   }]
+    name        = "demo_nop"
+    description = "security group"
+    inbound_rules = [{
+      port        = "5000"
+      protocol    = "tcp"
+      source      = "0.0.0.0/0"
+      description = "open tcp port"
+      },
+      {
+        port        = "22"
+        protocol    = "tcp"
+        source      = "0.0.0.0/0"
+        description = "open ssh port"
+    }]
+  }]
 }
 
 variable "db_security_group" {
@@ -109,14 +109,14 @@ variable "db_security_group" {
     }))
   })
   default = [{
-        name = "demo_nop_db"
-        description = "db security group"
-        inbound_rules = [{
-            port = "3306"
-            protocol = "tcp"
-            source = "10.100.0.0/16"
-            description = "open tcp port"
-        }]
+    name        = "demo_nop_db"
+    description = "db security group"
+    inbound_rules = [{
+      port        = "3306"
+      protocol    = "tcp"
+      source      = "10.100.0.0/16"
+      description = "open tcp port"
+    }]
   }]
 
 }
@@ -133,14 +133,14 @@ variable "lb_security_group" {
     }))
   })
   default = [{
-        name = "demo_nop_lb"
-        description = "LB security group"
-        inbound_rules = [{
-            port = "80"
-            protocol = "tcp"
-            source = "0.0.0.0/0"
-            description = "open tcp port"
-        }]
+    name        = "demo_nop_lb"
+    description = "LB security group"
+    inbound_rules = [{
+      port        = "80"
+      protocol    = "tcp"
+      source      = "0.0.0.0/0"
+      description = "open tcp port"
+    }]
   }]
 
 }
