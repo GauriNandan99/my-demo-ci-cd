@@ -21,3 +21,9 @@ module "dbsg" {
     vpc_id = module.vpc.id
     security_group_info = var.db_security_group
 }
+
+module "lbsg" {
+    source = "git::https://github.com/GauriNandan99/my-devops-project.git//modules/sg"
+    vpc_id = module.vpc.id
+    security_group_info = var.lb_security_group
+}
