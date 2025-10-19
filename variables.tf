@@ -68,7 +68,7 @@ variable "private_subnets_config" {
   }]
 }
 
-variable "security_group_info" {
+variable "security_group" {
   type = object({
     name        = string
     description = string
@@ -95,4 +95,28 @@ variable "security_group_info" {
             description = "open ssh port"
         }]    
    }]
+}
+
+variable "db_security_group" {
+  type = object({
+    name        = string
+    description = string
+    inbound_rules = list(object({
+      protocol    = string
+      port        = number
+      source      = string
+      description = string
+    }))
+  })
+  default = [{
+        name = "demo_nop"
+        description = "security group"
+        inbound_rules = [{
+            port = "3306"
+            protocol = "tcp"
+            source = "10.100.0.0/16"
+            description = "open tcp port"
+        }]
+  }]
+
 }
