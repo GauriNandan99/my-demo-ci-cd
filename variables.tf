@@ -144,3 +144,75 @@ variable "lb_security_group" {
   }]
 
 }
+
+
+variable "info_ami" {
+  description = "AMI information"
+  type = object({
+    id       = string
+    username = string
+  })
+  default = {
+    username = "ubuntu"
+  }
+}
+
+#launch template config
+variable "lbasg_template_details" {
+  type = object({
+    name                        = string
+    instance_type               = string
+    key_name                    = string
+    script_path                 = string
+    security_group_ids          = list(string)
+    associate_public_ip_address = bool
+  })
+  default = {
+    name                        = "demo_nop"
+    instance_type               = "t2.micro"
+    key_name                    = "my_idrsa"
+    script_path                 = "installdemo.sh"
+    security_group_ids          = []
+    associate_public_ip_address = true
+  }
+
+}
+
+#scaling size or limits
+variable "lbasg_scaling_details" {
+  type = object({
+    min_size   = number
+    max_size   = number
+    subnet_ids = list(string)
+  })
+  default = {
+    min_size   = 1
+    max_size   = 2
+    subnet_ids = []
+  }
+
+}
+
+#lb configuration
+variable "lb_details" {
+  type = object({
+    type               = string
+    internal           = bool
+    security_group_ids = list(string)
+    subnet_ids         = list(string)
+    vpc_id             = string
+    application_port   = number
+    port               = number
+
+  })
+  default = {
+    type               = "application"
+    internal           = false
+    security_group_ids = []
+    subnet_ids         = []
+    vpc_id             = ""
+    application_port   = 5000
+    port               = 80
+  }
+
+}
