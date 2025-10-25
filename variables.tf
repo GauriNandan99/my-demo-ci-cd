@@ -170,7 +170,7 @@ variable "lbasg_template_details" {
     associate_public_ip_address = bool
   })
   default = {
-    name                        = "demo_nop"
+    name                        = "demo-nop"
     instance_type               = "t2.micro"
     key_name                    = "my_idrsa"
     #script_path                 = "installdemo.sh"
