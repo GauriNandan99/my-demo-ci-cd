@@ -81,7 +81,7 @@ variable "security_group" {
     }))
   })
   default = {
-    name        = "demo_nop_sg"
+    name        = "demo-nop-sg"
     description = "security group"
     inbound_rules = [{
       port        = "5000"
@@ -110,7 +110,7 @@ variable "db_security_group" {
     }))
   })
   default = {
-    name        = "demo_nop_db"
+    name        = "demo-nop-db"
     description = "db security group"
     inbound_rules = [{
       port        = "3306"
@@ -134,7 +134,7 @@ variable "lb_security_group" {
     }))
   })
   default = {
-    name        = "demo_nop_lb"
+    name        = "demo-nop-lb"
     description = "LB security group"
     inbound_rules = [{
       port        = "80"

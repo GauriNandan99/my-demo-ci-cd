@@ -38,7 +38,7 @@ module "lbasg" {
     }
   )
   scaling_details = merge(
-    var.scaling_details,
+    var.lbasg_scaling_details,
     {
       subnet_ids = module.vpc.public_subnet_ids # overriding subnet_ids dynamically
     }
