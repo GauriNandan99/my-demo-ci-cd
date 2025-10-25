@@ -1,5 +1,5 @@
 variable "region" {
-  type        = strings
+  type        = string
   description = "region"
   default     = "ap-south-1"
 }
@@ -13,6 +13,7 @@ variable "vpc_info" {
   description = "my vpc info"
   default = {
     cidr_block = "10.100.0.0/16"
+    enable_dns_hostnames = true
     tags = {
       Name = "my-vpc"
     }
@@ -50,7 +51,7 @@ variable "private_subnets_config" {
     az         = string
     tags       = map(string)
   }))
-  description = "public subnets configuration"
+  description = "private subnets configuration"
   default = [{
     cidr_block = "10.100.2.0/24"
     tags = {
@@ -79,8 +80,8 @@ variable "security_group" {
       description = string
     }))
   })
-  default = [{
-    name        = "demo_nop"
+  default = {
+    name        = "demo_nop_sg"
     description = "security group"
     inbound_rules = [{
       port        = "5000"
@@ -94,7 +95,7 @@ variable "security_group" {
         source      = "0.0.0.0/0"
         description = "open ssh port"
     }]
-  }]
+  }
 }
 
 variable "db_security_group" {
@@ -108,7 +109,7 @@ variable "db_security_group" {
       description = string
     }))
   })
-  default = [{
+  default = {
     name        = "demo_nop_db"
     description = "db security group"
     inbound_rules = [{
@@ -117,7 +118,7 @@ variable "db_security_group" {
       source      = "10.100.0.0/16"
       description = "open tcp port"
     }]
-  }]
+  }
 
 }
 
@@ -132,7 +133,7 @@ variable "lb_security_group" {
       description = string
     }))
   })
-  default = [{
+  default = {
     name        = "demo_nop_lb"
     description = "LB security group"
     inbound_rules = [{
@@ -141,7 +142,7 @@ variable "lb_security_group" {
       source      = "0.0.0.0/0"
       description = "open tcp port"
     }]
-  }]
+  }
 
 }
 
@@ -153,6 +154,7 @@ variable "info_ami" {
     username = string
   })
   default = {
+    id = ""
     username = "ubuntu"
   }
 }
@@ -163,7 +165,7 @@ variable "lbasg_template_details" {
     name                        = string
     instance_type               = string
     key_name                    = string
-    script_path                 = string
+    #script_path                 = string
     security_group_ids          = list(string)
     associate_public_ip_address = bool
   })
@@ -171,7 +173,7 @@ variable "lbasg_template_details" {
     name                        = "demo_nop"
     instance_type               = "t2.micro"
     key_name                    = "my_idrsa"
-    script_path                 = "installdemo.sh"
+    #script_path                 = "installdemo.sh"
     security_group_ids          = []
     associate_public_ip_address = true
   }
