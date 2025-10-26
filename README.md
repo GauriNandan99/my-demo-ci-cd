@@ -163,10 +163,21 @@ apt-get install package  # Version might change
 
 ---
 
+## Pre Baked AMI in this project
+- Install Packer [Download here](https://www.packer.io/downloads)
+- Download nopCommerce  [Get it from the official site](https://www.nopcommerce.com/en/download-nopcommerce)
+- Install nopCommerce Follow the [Linux installation guide](https://docs.nopcommerce.com/en/installation-and-upgrading/installing-nopcommerce/installing-on-linux.html#get-nopcommerce) 
+- The Packer template (.pkr.hcl) and required installation script can be found in the nop-commerce/ folder.
+
+
+
+
+---
+
 ## Prerequisites
 
 ### Required Software
-- **Terraform** >= 1.5.0 - [Install](https://www.terraform.io/downloads)
+- **Terraform** >= 6.5.0 - [Install](https://www.terraform.io/downloads)
 - **AWS CLI** >= 2.0 - [Install](https://aws.amazon.com/cli/)
 - **Packer** >= 1.9.0 - [Install](https://www.packer.io/downloads) (for building AMIs)
 - **Git** - For cloning repository
