@@ -11,14 +11,14 @@ It includes examples of N‑tier application creation using modules and CI/CD pi
 # N-Tier Application Infrastructure - AWS Terraform
 
 
-
+The setup is designed for stateless and microservice-based applications, ensuring high availability, consistency, and zero manual configuration drift.
 A scalable, modular N-tier application infrastructure on AWS using Terraform with Auto Scaling capabilities powered by pre-baked AMIs.
 
 ---
 
 ## Overview
-
-This project implements a production-grade N-tier application architecture on AWS using Infrastructure as Code (IaC) principles. The infrastructure is designed to be highly available, scalable, and cost-effective across multiple environments.
+This project demonstrates a fully automated, immutable infrastructure deployment pipeline using Azure DevOps, Terraform, and Packer.
+It implements a production-grade N-tier application architecture on AWS using Infrastructure as Code (IaC) principles. The infrastructure is designed to be highly available, scalable, and cost-effective across multiple environments.
 
 ### Key Features
 
@@ -185,6 +185,134 @@ apt-get install package  # Version might change
 
 **Note** - This demo project does not include a database module. You can create a reusable module in a similar way to the other modules in this project, or you can directly use the RDS community module from [terraform-aws-modules/rds/aws](https://registry.terraform.io/modules/terraform-aws-modules/rds/aws/latest).
 You can also add additional modules as per your requirements.
+
+
+## Stage-2  Infrastructure Automation with CI/CD Pipeline
+
+## Pipeline Architecture
+
+### Repository Structure
+
+```
+infrastructre-creation-repo/
+├── src/                         # Application source code
+│ └── code/                      
+├── deployment/                  # Deployment configurations
+│ ├── packer/                    # Packer templates and scripts
+│ │ ├── installnopscript.sh      
+│ │ ├── nop.pkr.hcl              
+│ │ ├── nopCommerce.service 
+│ │ └── nopCommerce.zip 
+│ └── terraform/                  # tf files
+│ ├── main.tf
+│ ├── variables.tf
+│ ├── outputs.tf
+│ └── providers.tf
+└── azure-pipelines.yml           # Pipeline definition
+```
+### Pipeline Stages
+
+1. **Build Stage**: Compiles source code and creates deployment artifacts
+2. **Packer AMI Stage**: Generates pre-configured Amazon Machine Image with application code and dependencies
+3. **Terraform Stage**: Provisions/updates infrastructure using the new AMI
+
+## Key Benefits & Technical Approach
+
+###  Immutable Infrastructure Pattern
+
+- **Each code change triggers complete AMI rebuild** with updated application
+- **Eliminates runtime dependency installation** during instance launch and ASG
+- **Ensures consistent, versioned infrastructure** across all environments
+- **suitable for**: Stateless applications, microservices, and web applications
+
+
+## High Availability & Scalability Features
+
+### Multi-AZ Deployment
+
+```hcl
+# Auto Scaling Group across multiple Availability Zones
+resource "aws_autoscaling_group" "app" {
+  vpc_zone_identifier = [
+    "subnet-ap-south-1a",
+    "subnet-ap-south-1b", 
+    "subnet-ap-south-1c"
+  ]
+  min_size            = 2
+  max_size            = 6
+  desired_capacity    = 3
+  
+  health_check_type         = "ELB"
+  health_check_grace_period = 300
+  
+  tags = [
+    {
+      key                 = "Name"
+      value               = "app-server"
+      propagate_at_launch = true
+    }
+  ]
+}
+```
+
+### Zero-Downtime Deployments with Instance Refresh
+
+```hcl
+instance_refresh {
+  strategy = "Rolling"
+  preferences {
+    min_healthy_percentage = 66    # Maintains service availability
+    instance_warmup        = 30    # Health check grace period
+  }
+}
+```
+**How it works:**
+- Instance Refresh automatically replaces old instances with new ones in a rolling fashion
+- Maintains desired capacity throughout the process
+- Ensures minimum 66% of instances remain healthy during update
+- New instances launch with updated AMI containing latest application code
+
+**Benefits:**
+-  Zero downtime during deployments
+-  Automatic rollback on health check failures
+-  Gradual rollout reduces risk
+-  Application always available to users
+
+---
+
+## Environment Management Recommended
+
+### Terraform Workspaces for Environment Isolation
+
+```bash
+# Pipeline commands for environment separation
+terraform workspace select dev
+terraform workspace new staging
+terraform workspace select prod
+```
+
+
+**Benefits:**
+- Isolated state for each environment
+- Prevents accidental changes to production
+- Easy environment switching
+- Parallel deployments possible
+
+---
+
+## Self-Hosted Azure DevOps Agent
+
+ **EC2 Instance with necessary tooling pre-installed:**
+
+- **.NET ** (for nopCommerce build)
+- **Terraform** (infrastructure provisioning)
+- **Packer** (AMI creation)
+- **AWS CLI** (cloud operations)
+
+You can implement branching strategies in this Azure DevOps CI/CD pipeline to manage deployments effectively — for example, using feature, develop, staging, and main (production) branches. Configure production deployments to require manual approval from the production deployment team for added control.
+
+When any code change or update is made, the pipeline will automatically trigger: the code is built, a new AMI with the updated code is generated, and Terraform applies it to the infrastructure. This approach eliminates the need to reinstall code and dependencies each time new instances are launched by the Auto Scaling Group.
+
 
 ## License
 
